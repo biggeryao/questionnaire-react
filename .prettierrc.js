@@ -22,5 +22,6 @@ module.exports = {
     // 后置逗号，多行对象、数组在最后一行增加逗号
     trailingComma: 'es5',
     parser: 'typescript',
-  }
+    endOfLine: "auto"
+    }
   
