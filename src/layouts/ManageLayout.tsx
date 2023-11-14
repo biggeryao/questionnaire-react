@@ -1,8 +1,7 @@
 import React, { FC } from 'react'
 import { Outlet } from 'react-router-dom'
 import styles from './Manage.module.scss'
-import { Button } from 'yao-react-ui'
-import { Space } from 'antd'
+import { Space, Button } from 'antd'
 import { useNavigate, useLocation } from 'react-router-dom'
 const ManageLayout: FC = () => {
   const nav = useNavigate()
@@ -10,12 +9,12 @@ const ManageLayout: FC = () => {
   return (
     <div className={styles.container}>
       <Space className={styles.left} direction="vertical">
-        <Button btnType="primary" size="lg">
+        <Button type="primary" size="large">
           创建问卷
         </Button>
         <Button
-          btnType={pathname.startsWith('/manage/list') ? 'primary' : 'default'}
-          size="lg"
+          type={pathname.startsWith('/manage/list') ? 'primary' : 'default'}
+          size="large"
           onClick={() => {
             nav('/manage/list')
           }}
@@ -23,8 +22,8 @@ const ManageLayout: FC = () => {
           我的问卷
         </Button>
         <Button
-          btnType={pathname.startsWith('/manage/star') ? 'primary' : 'default'}
-          size="lg"
+          type={pathname.startsWith('/manage/star') ? 'primary' : 'default'}
+          size="large"
           onClick={() => {
             nav('/manage/star')
           }}
@@ -32,8 +31,8 @@ const ManageLayout: FC = () => {
           星标问卷
         </Button>
         <Button
-          btnType={pathname.startsWith('/manage/trash') ? 'primary' : 'default'}
-          size="lg"
+          type={pathname.startsWith('/manage/trash') ? 'primary' : 'default'}
+          size="large"
           onClick={() => {
             nav('/manage/trash')
           }}
