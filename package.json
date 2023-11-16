@@ -13,8 +13,10 @@
     "@types/react-dom": "^18.2.14",
     "ahooks": "^3.7.8",
     "antd": "^5.11.1",
+    "axios": "^1.6.2",
     "classnames": "^2.3.2",
     "immer": "^10.0.3",
+    "mockjs": "^1.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.18.0",
@@ -25,10 +27,10 @@
     "yao-react-ui": "^0.1.2"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
+    "start": "craco start",
+    "build": "craco build",
+    "test": "craco test",
+    "eject": "craco eject",
     "lint": " eslint src",
     "format": " prettier --write 'src/**/*.{js,ts,jsx,tsx}' ",
     "prepare": "husky install"
@@ -54,6 +56,8 @@
   "devDependencies": {
     "@commitlint/cli": "^18.2.0",
     "@commitlint/config-conventional": "^18.1.0",
+    "@craco/craco": "^7.1.0",
+    "@types/mockjs": "^1.0.10",
     "@typescript-eslint/eslint-plugin": "^6.10.0",
     "@typescript-eslint/parser": "^6.10.0",
     "eslint": "^8.53.0",
