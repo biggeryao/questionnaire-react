@@ -3,13 +3,21 @@ import { Outlet } from 'react-router-dom'
 import styles from './Manage.module.scss'
 import { Space, Button } from 'antd'
 import { useNavigate, useLocation } from 'react-router-dom'
+import { createQuestionService } from '../services/question'
+import { useRequest } from 'ahooks'
 const ManageLayout: FC = () => {
   const nav = useNavigate()
   const { pathname } = useLocation()
+  const { loading, run: handleCreateClick } = useRequest(createQuestionService, {
+    manual: true,
+    onSuccess({ id }) {
+      nav(`/question/edit/${id}`)
+    },
+  })
   return (
     <div className={styles.container}>
       <Space className={styles.left} direction="vertical">
-        <Button type="primary" size="large">
+        <Button type="primary" size="large" loading={loading} onClick={handleCreateClick}>
           创建问卷
         </Button>
         <Button
