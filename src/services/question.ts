@@ -2,6 +2,8 @@ import axios, { ResDataType } from './ajax'
 
 type SearchOption = {
   keyword: string
+  isStar: boolean
+  isDeleted: boolean
 }
 export async function getQuestionService(id: string): Promise<ResDataType> {
   const url = `/api/question/${id}`

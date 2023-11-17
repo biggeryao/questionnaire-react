@@ -1,23 +1,17 @@
 import React, { FC, useState } from 'react'
 import styles from './common.module.scss'
-import { Button, Empty, Modal, Space, Table, Tag, Typography } from 'antd'
+import { Button, Empty, Modal, Space, Spin, Table, Tag, Typography } from 'antd'
 import { useTitle } from 'ahooks'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import ListSearch from '../../components/ListSearch'
+import useLoadQuestionListData from '../../hooks/useLoadQuestionListData'
 
-const rawQuestionList = [
-  {
-    _id: 'q5',
-    title: '问卷5',
-    isPublished: false,
-    isStar: false,
-    answerCount: 5,
-    createdAt: '3月13日 12:23',
-  },
-]
 const Trash: FC = () => {
   useTitle('问卷星球-回收站')
-  const [questionList] = useState(rawQuestionList)
+  const { data = {}, loading } = useLoadQuestionListData({ isDeleted: true })
+  const { list = [], total = 0 } = data
+  console.log(list)
+  console.log(total)
   const [selectedIds, setSelectedIds] = useState<string[]>([])
   const { Title } = Typography
   const { confirm } = Modal
@@ -56,7 +50,7 @@ const Trash: FC = () => {
         </Space>
       </div>
       <Table
-        dataSource={questionList}
+        dataSource={list}
         columns={tableColumns}
         pagination={false}
         rowKey={q => q._id}
@@ -80,8 +74,13 @@ const Trash: FC = () => {
         </div>
       </div>
       <div className={styles.content}>
-        {questionList.length === 0 && <Empty description="暂无数据" />}
-        {questionList.length > 0 && TableElem}
+        {loading && (
+          <div style={{ textAlign: 'center' }}>
+            <Spin />
+          </div>
+        )}{' '}
+        {!loading && list.length === 0 && <Empty description="暂无数据" />}
+        {!loading && list.length > 0 && TableElem}
       </div>
       <div className={styles.footer}>footer</div>
     </>
