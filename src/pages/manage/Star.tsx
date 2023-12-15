@@ -12,7 +12,6 @@ const Star: FC = () => {
   useTitle('问卷星球-星标问卷')
   const { data = {}, loading } = useLoadQuestionListData({ isStar: true })
   const { list = [], total = 0 } = data
-  console.log(total)
   return (
     <>
       <div className={styles.header}>

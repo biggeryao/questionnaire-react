@@ -11,8 +11,6 @@ const Trash: FC = () => {
   useTitle('问卷星球-回收站')
   const { data = {}, loading } = useLoadQuestionListData({ isDeleted: true })
   const { list = [], total = 0 } = data
-  console.log(list)
-  console.log(total)
   const [selectedIds, setSelectedIds] = useState<string[]>([])
   const { Title } = Typography
   const { confirm } = Modal
