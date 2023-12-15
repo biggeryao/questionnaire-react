@@ -5,6 +5,7 @@ import { useTitle } from 'ahooks'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import ListSearch from '../../components/ListSearch'
 import useLoadQuestionListData from '../../hooks/useLoadQuestionListData'
+import ListPage from '../../components/ListPage'
 
 const Trash: FC = () => {
   useTitle('问卷星球-回收站')
@@ -82,7 +83,9 @@ const Trash: FC = () => {
         {!loading && list.length === 0 && <Empty description="暂无数据" />}
         {!loading && list.length > 0 && TableElem}
       </div>
-      <div className={styles.footer}>footer</div>
+      <div className={styles.footer}>
+        <ListPage total={total}></ListPage>
+      </div>
     </>
   )
 }

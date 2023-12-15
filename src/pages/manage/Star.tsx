@@ -5,6 +5,7 @@ import { Empty, Spin, Typography } from 'antd'
 import { useTitle } from 'ahooks'
 import ListSearch from '../../components/ListSearch'
 import useLoadQuestionListData from '../../hooks/useLoadQuestionListData'
+import ListPage from '../../components/ListPage'
 
 const { Title } = Typography
 const Star: FC = () => {
@@ -36,7 +37,9 @@ const Star: FC = () => {
             return <QuestionCard key={_id} {...q}></QuestionCard>
           })}
       </div>
-      <div className={styles.footer}>footer</div>
+      <div className={styles.footer}>
+        <ListPage total={total}></ListPage>
+      </div>
     </>
   )
 }
