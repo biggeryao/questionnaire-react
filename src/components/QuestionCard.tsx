@@ -12,6 +12,7 @@ import {
 import { Link, useNavigate } from 'react-router-dom'
 import { useRequest } from 'ahooks'
 import { duplicateQuestionService, updateQuestionService } from '../services/question'
+
 type PropsType = {
   _id: string
   title: string
@@ -25,6 +26,7 @@ const QuestionCard: FC<PropsType> = (props: PropsType) => {
   const { confirm } = Modal
   const { _id, title, createdAt, isStar, answerCount, isPublished } = props
   const [isStarState, setIsStarState] = useState(isStar)
+  const [isDeleteState, setIsDeleteState] = useState(false)
   const { loading: changeStarLoading, run: changStar } = useRequest(
     async () => {
       await updateQuestionService(_id, { isStar: !isStarState })
@@ -54,9 +56,23 @@ const QuestionCard: FC<PropsType> = (props: PropsType) => {
     confirm({
       title: '确定删除该问卷',
       icon: <ExclamationCircleOutlined />,
-      onOk: () => {},
+      onOk: deleteQuestion,
     })
   }
+  const { loading: deleteLoading, run: deleteQuestion } = useRequest(
+    async () => {
+      return await updateQuestionService(_id, {
+        isDeleted: true,
+      })
+    },
+    {
+      manual: true,
+      onSuccess() {
+        setIsDeleteState(true)
+      },
+    }
+  )
+  if (isDeleteState) return null
   return (
     <div className={styles.container}>
       <div className={styles.title}>
@@ -121,7 +137,13 @@ const QuestionCard: FC<PropsType> = (props: PropsType) => {
               </Button>
             </Popconfirm>
 
-            <Button type="text" icon={<DeleteOutlined />} size="small" onClick={del}>
+            <Button
+              type="text"
+              icon={<DeleteOutlined />}
+              size="small"
+              onClick={del}
+              disabled={deleteLoading}
+            >
               删除
             </Button>
           </Space>
