@@ -1,28 +1,46 @@
 import React, { FC, useEffect } from 'react'
 import styles from './Login.module.scss'
 import { UserAddOutlined } from '@ant-design/icons'
-import { Button, Checkbox, Form, Input, Space } from 'antd'
+import { Button, Checkbox, Form, Input, message, Space } from 'antd'
 import Title from 'antd/lib/typography/Title'
-import { Link } from 'react-router-dom'
-import { REGISTER_PATHNAME } from '../router'
+import { Link, useNavigate } from 'react-router-dom'
+import { MANAGE_INDEX_PATHNAME, REGISTER_PATHNAME } from '../router'
+import { useRequest } from 'ahooks'
+import { loginService } from '../services/user'
+import { setToken } from '../utils/user-token'
 
-const USERNAME_KEY = 'USERNAME'
-const PASSWORD_KEY = 'PASSWORD'
-const rememberUser = (username: string, password: string) => {
-  localStorage.setItem(USERNAME_KEY, username)
-  localStorage.setItem(PASSWORD_KEY, password)
-}
-const deleteUserFromStorage = () => {
-  localStorage.removeItem(USERNAME_KEY)
-  localStorage.removeItem(PASSWORD_KEY)
-}
-const getUserFromStorage = () => {
-  return {
-    username: localStorage.getItem(USERNAME_KEY),
-    password: localStorage.getItem(PASSWORD_KEY),
-  }
-}
 const Login: FC = () => {
+  const USERNAME_KEY = 'USERNAME'
+  const PASSWORD_KEY = 'PASSWORD'
+  const nav = useNavigate()
+  const rememberUser = (username: string, password: string) => {
+    localStorage.setItem(USERNAME_KEY, username)
+    localStorage.setItem(PASSWORD_KEY, password)
+  }
+  const deleteUserFromStorage = () => {
+    localStorage.removeItem(USERNAME_KEY)
+    localStorage.removeItem(PASSWORD_KEY)
+  }
+  const getUserFromStorage = () => {
+    return {
+      username: localStorage.getItem(USERNAME_KEY),
+      password: localStorage.getItem(PASSWORD_KEY),
+    }
+  }
+  const { run } = useRequest(
+    async (username, password) => {
+      return await loginService(username, password)
+    },
+    {
+      manual: true,
+      onSuccess(res) {
+        const { token = '' } = res
+        setToken(token)
+        message.success('登录成功')
+        nav(MANAGE_INDEX_PATHNAME)
+      },
+    }
+  )
   // const nav = useNavigate()
   const [form] = Form.useForm()
   useEffect(() => {
@@ -31,6 +49,7 @@ const Login: FC = () => {
   }, [])
   const onFinsh = (value: any) => {
     const { remember, username, password } = value || {}
+    run(username, password)
     if (remember) {
       rememberUser(username, password)
     } else {
