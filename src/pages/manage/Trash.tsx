@@ -1,25 +1,58 @@
 import React, { FC, useState } from 'react'
 import styles from './common.module.scss'
-import { Button, Empty, Modal, Space, Spin, Table, Tag, Typography } from 'antd'
-import { useTitle } from 'ahooks'
+import { Button, Empty, message, Modal, Space, Spin, Table, Tag, Typography } from 'antd'
+import { useRequest, useTitle } from 'ahooks'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import ListSearch from '../../components/ListSearch'
 import useLoadQuestionListData from '../../hooks/useLoadQuestionListData'
 import ListPage from '../../components/ListPage'
+import { deleteQuestionService, updateQuestionService } from '../../services/question'
 
 const Trash: FC = () => {
   useTitle('问卷星球-回收站')
-  const { data = {}, loading } = useLoadQuestionListData({ isDeleted: true })
+  const { data = {}, loading, refresh } = useLoadQuestionListData({ isDeleted: true })
   const { list = [], total = 0 } = data
   const [selectedIds, setSelectedIds] = useState<string[]>([])
   const { Title } = Typography
   const { confirm } = Modal
+
+  const { run: recover } = useRequest(
+    async () => {
+      for await (const id of selectedIds) {
+        await updateQuestionService(id, { isDeleted: false })
+      }
+    },
+    {
+      manual: true,
+      debounceWait: 500, //防抖
+      onSuccess() {
+        message.success('恢复成功')
+        refresh()
+        setSelectedIds([])
+      },
+    }
+  )
+  const { run: deleteQuestion } = useRequest(
+    async () => {
+      await deleteQuestionService(selectedIds)
+    },
+    {
+      manual: true,
+      onSuccess() {
+        message.success('删除成功')
+        refresh()
+        setSelectedIds([])
+      },
+    }
+  )
   function del() {
     confirm({
       title: '确认删除该问卷',
       icon: <ExclamationCircleOutlined />,
       content: '删除以后不可以找回',
-      onOk: () => alert(JSON.stringify(selectedIds)),
+      onOk: () => {
+        return deleteQuestion()
+      },
     })
   }
 
@@ -40,7 +73,7 @@ const Trash: FC = () => {
     <>
       <div style={{ marginBottom: '16px' }}>
         <Space>
-          <Button type="primary" disabled={selectedIds.length === 0}>
+          <Button type="primary" disabled={selectedIds.length === 0} onClick={recover}>
             恢复
           </Button>
           <Button danger disabled={selectedIds.length === 0} onClick={del}>
