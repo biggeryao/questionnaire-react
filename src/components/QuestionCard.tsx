@@ -11,7 +11,7 @@ import {
 } from '@ant-design/icons'
 import { Link, useNavigate } from 'react-router-dom'
 import { useRequest } from 'ahooks'
-import { updateQuestionService } from '../services/question'
+import { duplicateQuestionService, updateQuestionService } from '../services/question'
 type PropsType = {
   _id: string
   title: string
@@ -37,7 +37,19 @@ const QuestionCard: FC<PropsType> = (props: PropsType) => {
       },
     }
   )
-  function duplicate() {}
+  const { loading: duplicateLoading, run: duplicate } = useRequest(
+    async () => {
+      const data = await duplicateQuestionService(_id)
+      return data
+    },
+    {
+      manual: true,
+      onSuccess(res: any) {
+        message.success('复制成功')
+        nav(`/question/edit/${res.id}`) //跳转到问卷编辑页
+      },
+    }
+  )
   function del() {
     confirm({
       title: '确定删除该问卷',
@@ -104,7 +116,7 @@ const QuestionCard: FC<PropsType> = (props: PropsType) => {
               cancelText="取消"
               onConfirm={duplicate}
             >
-              <Button type="text" icon={<CopyOutlined />} size="small">
+              <Button type="text" icon={<CopyOutlined />} size="small" disabled={duplicateLoading}>
                 复制
               </Button>
             </Popconfirm>
