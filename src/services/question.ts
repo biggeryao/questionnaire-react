@@ -23,3 +23,11 @@ export async function getQuestionListService(
   const data = (await axios.get(url, { params: opt })) as ResDataType
   return data
 }
+export async function updateQuestionService(
+  id: string,
+  opt: { [key: string]: any }
+): Promise<ResDataType> {
+  const url = `/api/question/${id}`
+  const data = (await axios.patch(url, { params: opt })) as ResDataType
+  return data
+}
