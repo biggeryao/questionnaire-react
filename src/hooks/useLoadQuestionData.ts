@@ -31,11 +31,16 @@ function useLoadQuestionData() {
 
   //根据获取的data设置redux store
   useEffect(() => {
-    console.log(data)
     const { title = '', componentList = [] } = data
     console.log(title)
+
+    let selectedId = ''
+    //默认选中第一个组件
+    if (componentList.length > 0) {
+      selectedId = componentList[0].fe_id
+    }
     //把 componentList 存储到redux store
-    dispatch(resetComponents({ componentList }))
+    dispatch(resetComponents({ componentList, selectedId }))
   }, [data])
 
   return { loading, error }
