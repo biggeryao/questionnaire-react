@@ -40,9 +40,25 @@ export const componentsSlice = createSlice({
         draft.selectedId = newComponent.fe_id
       }
     ),
+    changeComponentProps: produce(
+      (
+        draft: ComponentsStateType,
+        action: PayloadAction<{ fe_id: string; newProps: ComponentPropsType }>
+      ) => {
+        const { fe_id, newProps } = action.payload
+        const curComp = draft.componentList.find(c => c.fe_id === fe_id)
+        if (curComp) {
+          curComp.props = {
+            ...curComp.props,
+            ...newProps,
+          }
+        }
+      }
+    ),
   },
 })
 
-export const { resetComponents, changeSelectedId, addComponent } = componentsSlice.actions
+export const { resetComponents, changeSelectedId, addComponent, changeComponentProps } =
+  componentsSlice.actions
 
 export default componentsSlice.reducer
