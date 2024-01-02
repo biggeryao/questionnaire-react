@@ -40,7 +40,7 @@ function useLoadQuestionData() {
       selectedId = componentList[0].fe_id
     }
     //把 componentList 存储到redux store
-    dispatch(resetComponents({ componentList, selectedId }))
+    dispatch(resetComponents({ componentList, selectedId, copiedComponent: null }))
   }, [data])
 
   return { loading, error }

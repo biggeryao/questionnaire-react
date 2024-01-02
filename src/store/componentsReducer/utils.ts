@@ -1,4 +1,4 @@
-import { ComponentInfoType } from './index'
+import { ComponentInfoType, ComponentsStateType } from './index'
 
 export function getNextSelectedId(fe_id: string, componentList: Array<ComponentInfoType>) {
   const visibleComponentList = componentList.filter(c => !c.isHidden)
@@ -17,4 +17,15 @@ export function getNextSelectedId(fe_id: string, componentList: Array<ComponentI
     }
   }
   return newSelectedId
+}
+
+export function insertNewComponent(draft: ComponentsStateType, newComponent: ComponentInfoType) {
+  const { selectedId, componentList } = draft
+  const index = componentList.findIndex(c => c.fe_id === selectedId)
+  if (index < 0) {
+    componentList.push(newComponent)
+  } else {
+    componentList.splice(index + 1, 0, newComponent)
+  }
+  draft.selectedId = newComponent.fe_id
 }
