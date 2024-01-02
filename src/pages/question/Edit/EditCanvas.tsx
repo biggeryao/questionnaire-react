@@ -6,6 +6,7 @@ import { getComponentConfigByType } from '../../../components/QuestionComponents
 import { Spin } from 'antd'
 import { useDispatch } from 'react-redux'
 import classNames from 'classnames'
+import useBindCanvasKeyPress from '../../../hooks/useBindCanvasKeyPress'
 type PropsType = {
   loading: boolean
 }
@@ -25,6 +26,7 @@ const EditCanvas: FC<PropsType> = ({ loading }) => {
     event.stopPropagation()
     dispatch(changeSelectedId(id))
   }
+  useBindCanvasKeyPress()
   if (loading) {
     return (
       <div style={{ textAlign: 'center', marginTop: '24px' }}>
