@@ -4,6 +4,7 @@ import { useRequest } from 'ahooks'
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { resetComponents } from '../store/componentsReducer/index'
+import { resetPageInfo } from '../store/pageInfoReducer'
 function useLoadQuestionData() {
   const { id = '' } = useParams()
   const dispatch = useDispatch()
@@ -31,8 +32,7 @@ function useLoadQuestionData() {
 
   //根据获取的data设置redux store
   useEffect(() => {
-    const { title = '', componentList = [] } = data
-    console.log(title)
+    const { title = '', desc = '', css = '', js = '', componentList = [] } = data
 
     let selectedId = ''
     //默认选中第一个组件
@@ -41,6 +41,7 @@ function useLoadQuestionData() {
     }
     //把 componentList 存储到redux store
     dispatch(resetComponents({ componentList, selectedId, copiedComponent: null }))
+    dispatch(resetPageInfo({ title, desc, css, js }))
   }, [data])
 
   return { loading, error }
