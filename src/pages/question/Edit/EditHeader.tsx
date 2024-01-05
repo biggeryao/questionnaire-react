@@ -9,7 +9,7 @@ import useGetPageInfo from '../../../hooks/useGetPageInfo'
 import { useDispatch } from 'react-redux'
 import { changePageTitle } from '../../../store/pageInfoReducer'
 import useGetComponentsInfo from '../../../hooks/useGetComponentsInfo'
-import { useKeyPress, useRequest } from 'ahooks'
+import { useDebounceEffect, useKeyPress, useRequest } from 'ahooks'
 import { updateQuestionService } from '../../../services/question'
 
 //显示、修改标题组件
@@ -49,6 +49,13 @@ const SaveButton: FC = () => {
     event.preventDefault()
     if (!loading) run()
   })
+  useDebounceEffect(
+    () => {
+      if (!loading) run()
+    },
+    [componentList, pageInfo],
+    { wait: 1000 }
+  )
   const { run, loading } = useRequest(
     async () => {
       if (!id) return
