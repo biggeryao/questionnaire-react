@@ -1,14 +1,18 @@
 import React, { ChangeEvent, FC, useState } from 'react'
 import styles from './EditHeader.module.scss'
 import { Button, Input, Space } from 'antd'
-import { EditOutlined, LeftOutlined } from '@ant-design/icons'
-import { useNavigate } from 'react-router-dom'
+import { EditOutlined, LeftOutlined, LoadingOutlined } from '@ant-design/icons'
+import { useNavigate, useParams } from 'react-router-dom'
 import Title from 'antd/lib/typography/Title'
 import EditToolbar from './EditToolbar'
 import useGetPageInfo from '../../../hooks/useGetPageInfo'
 import { useDispatch } from 'react-redux'
 import { changePageTitle } from '../../../store/pageInfoReducer'
+import useGetComponentsInfo from '../../../hooks/useGetComponentsInfo'
+import { useKeyPress, useRequest } from 'ahooks'
+import { updateQuestionService } from '../../../services/question'
 
+//显示、修改标题组件
 const TitleElem: FC = () => {
   const { title } = useGetPageInfo()
   const dispatch = useDispatch()
@@ -35,6 +39,34 @@ const TitleElem: FC = () => {
     </Space>
   )
 }
+
+//保存按钮组件
+const SaveButton: FC = () => {
+  const { componentList } = useGetComponentsInfo()
+  const pageInfo = useGetPageInfo()
+  const { id } = useParams()
+  useKeyPress(['ctrl.s', 'meta.s'], (event: KeyboardEvent) => {
+    event.preventDefault()
+    if (!loading) run()
+  })
+  const { run, loading } = useRequest(
+    async () => {
+      if (!id) return
+      await updateQuestionService(id, { ...pageInfo, componentList })
+    },
+    {
+      manual: true,
+    }
+  )
+  function handleSave() {
+    run()
+  }
+  return (
+    <Button loading={loading} onClick={handleSave} icon={loading ? <LoadingOutlined /> : null}>
+      保存
+    </Button>
+  )
+}
 const EditHeader: FC = () => {
   const nav = useNavigate()
   return (
@@ -53,7 +85,7 @@ const EditHeader: FC = () => {
         </div>
         <div className={styles.right}>
           <Space>
-            <Button>保存</Button>
+            <SaveButton />
             <Button type="primary">发布</Button>
           </Space>
         </div>
