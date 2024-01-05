@@ -1,6 +1,6 @@
 import React, { ChangeEvent, FC, useState } from 'react'
 import styles from './EditHeader.module.scss'
-import { Button, Input, Space } from 'antd'
+import { Button, Input, message, Space } from 'antd'
 import { EditOutlined, LeftOutlined, LoadingOutlined } from '@ant-design/icons'
 import { useNavigate, useParams } from 'react-router-dom'
 import Title from 'antd/lib/typography/Title'
@@ -74,6 +74,35 @@ const SaveButton: FC = () => {
     </Button>
   )
 }
+
+const PublishButton: FC = () => {
+  const { id } = useParams()
+  const nav = useNavigate()
+  const { componentList } = useGetComponentsInfo()
+  const pageInfo = useGetPageInfo()
+  const { run, loading } = useRequest(
+    async () => {
+      if (!id) return
+      await updateQuestionService(id, { ...pageInfo, componentList, isPublish: true })
+    },
+    {
+      manual: true,
+      onSuccess() {
+        message.success('发布成功')
+        nav('/question/stat/' + id)
+      },
+    }
+  )
+  function handlePublish() {
+    run()
+  }
+
+  return (
+    <Button type="primary" loading={loading} onClick={handlePublish}>
+      发布
+    </Button>
+  )
+}
 const EditHeader: FC = () => {
   const nav = useNavigate()
   return (
@@ -93,7 +122,7 @@ const EditHeader: FC = () => {
         <div className={styles.right}>
           <Space>
             <SaveButton />
-            <Button type="primary">发布</Button>
+            <PublishButton />
           </Space>
         </div>
       </div>
