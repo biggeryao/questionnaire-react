@@ -11,6 +11,7 @@ import { useDispatch } from 'react-redux'
 function isActiveElementValid() {
   const activeElem = document.activeElement
   if (activeElem === document.body) return true //光标不在input
+  if (activeElem?.matches('div[role="button"]')) return true //光标不在input
   return false
 }
 function useBindCanvasKeyPress() {
